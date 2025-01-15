@@ -1,0 +1,9 @@
+---
+const {event} = Astro.props; 
+---
+<div class="border p-4 my-4" x-data=`{event: ${JSON.stringify(event)}}` :class="{ 'bg-yellow-100': event.favori }">
+    <h2 class="text-lg"><span x-text="event.title"></span></h2>
+    <p class="text-sm"><span x-text="event.date"></p>
+    <button @click="event.favori = !event.favori">Favori</button>
+</div>
+

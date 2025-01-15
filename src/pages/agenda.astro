@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Card from "../components/Card.astro";
+
+const events = [
+    {
+        title: "Conférence sur les astres",
+        date: "Lundi 12 Juillet",
+        favori: true,
+    },
+    {
+        title: "Atelier sur les étoiles",
+        date: "Mardi 13 Juillet",
+        favori: false,
+    },
+];
+---
+
+<Layout>
+    <p>Voici l'agenda de la semaine</p>
+    {events.map((event) => (
+        <Card event={event} />
+    ))}
+</Layout>
