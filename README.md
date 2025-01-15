@@ -30,7 +30,7 @@
 
 2. Ajoutez la page dans le menu de navigation dans `components/Header.astro`.
 
-3. Ajoutez la liste des événements suivante dans `agenda.astro` :
+3. Ajoutez la liste des événements suivante dans le frontmatter de `agenda.astro` :
 ```js
 const events = [
     {
