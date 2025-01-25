@@ -54,3 +54,54 @@ npx astro add alpine.js
 ```
 
 6. En utilisant alpine.js, changez la couleur du fond de la carte en fonction de si l'événement est favori.
+
+# TD 3
+
+**Objectifs**:
+- Afficher une liste de données dynamiques provenant d'une base de données.
+- Formater une date en JavaScript.
+- Utiliser des modules JavaScript.
+
+1. Installez le paquet `pocketbase` pour pouvoir se connecter à la base de données et utiliser l'API PocketBase en exécutant la commande : `npm install pocketbase`.
+2. Créez le fichier `backend.mjs` dans le dossier `src/js`. Ce fichier est un module JavaScript qui gère les communications avec PocketBase.
+3. Comme vu dans le module R214, créez une instance de `PocketBase` :
+    ```js
+    import PocketBase from "pocketbase";
+    const pb = new PocketBase("http://127.0.0.1:8090");
+    ```
+
+    > La constante `pb` contient une instance de la classe `PocketBase`. Elle peut maintenant être utilisée pour interagir avec le serveur PocketBase et effectuer des opérations CRUD (Create, Read, Update, Delete).
+
+4. Écrivez la fonction vue dans le module R214 pour récupérer la liste des événements dans `backend.mjs`:
+```js
+export async function getEvents() {
+    const today = new Date().toISOString();
+    let events = await pb.collection("events").getFullList(
+        {
+            sort: "-date",
+            order: "desc",
+            filter: `date >= "${today}"`,
+        }
+    );
+    return events;
+}
+```
+5. Afin de récupérer les images, PocketBase utilise un système de stockage de fichiers. Vous pouvez accéder aux images en utilisant l'URL sauvegardée dans la collection avec la fonction `pb.files.getURL(record, url)`.
+6. Pour chaque élément dans la liste récupérée d'événements, ajoutez une propriété contenant l'URL de l'image :
+```js
+events.forEach((event) => {
+    event.img = pb.files.getURL(event, event.imgUrl);
+});
+```
+1. Pour formatter la date, utilisez la classe `Date` en JavaScript. Par exemple :
+```js
+const eventDate = new Date(event.date);
+const formattedDate = eventDate.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+});
+event.formattedDate = formattedDate;
+```
+
