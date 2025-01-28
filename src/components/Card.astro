@@ -1,9 +1,22 @@
 ---
-const {event} = Astro.props; 
+
+const {...event} = Astro.props; // Destructure les propriétés de l'objet event
+
+// event contient les propriétés provenant de la liste d'événements passée en paramètre à la balise <Card> dans src/pages/agenda.astro. Elle contient les noms de colonnes dans votre collection pocketbase
+// Vous devez changer les propriétés de l'objet event pour correspondre à votre collection pocketbase
 ---
-<div class="border p-4 my-4" x-data=`{event: ${JSON.stringify(event)}}` :class="{ 'bg-yellow-100': event.favori }">
-    <h2 class="text-lg"><span x-text="event.title"></span></h2>
-    <p class="text-sm"><span x-text="event.date"></p>
-    <button @click="event.favori = !event.favori">Favori</button>
+
+<!--
+    Ce composant utilise Alpine.js pour gérer l'état dynamique.
+    `favori` est une propriété dynamique gérée par Alpine.js et non pas par Astro. Donc, elle n'est pas une colonne de votre collection pocketbase.
+    Lorsque `favori` est vrai, la classe `bg-yellow-100` est appliquée.
+-->
+<div x-data=`{favori: false}` class="mt-10 border" :class="{'bg-yellow-100': favori}"> <!-- favori est  -->
+    <h2>{event.title}</h2>
+    <img src={event.img} alt={event.imgAlt} class="w-64 h-64 object-cover" />
+    <p>{event.date}</p>
+    <p>{event.excerpt}</p>
+    <p set:html={event.description}></span></p>
+    <button @click="favori = !favori" class="bg-slate-200 rounded-2xl p-3">Favori</button>
 </div>
 
