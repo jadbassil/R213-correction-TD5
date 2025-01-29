@@ -1,8 +1,9 @@
 ---
 //@ts-nocheck
-import Layout from "../layouts/Layout.astro";
-import Card from "../components/Card.astro";
-import { getEvents } from "../js/backend.mjs";
+import Layout from "../../layouts/Layout.astro";
+import Card from "../../components/Card.astro";
+import { getEvents } from "../../js/backend.mjs";
+
 
 const events = await getEvents(); // Retourne une liste d'événements en ejoutant un champ "img" contenant le URL complet de l'image associée à l'événement.
 ---
@@ -13,7 +14,6 @@ const events = await getEvents(); // Retourne une liste d'événements en ejouta
     // parcourir la liste d'événements et afficher chaque événement en utilisant le composant Card. L'operateur spread ... permet de passer toutes les propriétés de l'objet event à la balise <Card>
     events.map((event) => (
         <Card {...event} />
-))}
-
-    
+    ))
+    } 
 </Layout>

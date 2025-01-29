@@ -1,5 +1,5 @@
 ---
-
+import { setFavoriteEvent } from "../js/backend.mjs";
 const {...event} = Astro.props; // Destructure les propriétés de l'objet event
 
 // event contient les propriétés provenant de la liste d'événements passée en paramètre à la balise <Card> dans src/pages/agenda.astro. Elle contient les noms de colonnes dans votre collection pocketbase
@@ -11,12 +11,19 @@ const {...event} = Astro.props; // Destructure les propriétés de l'objet event
     `favori` est une propriété dynamique gérée par Alpine.js et non pas par Astro. Donc, elle n'est pas une colonne de votre collection pocketbase.
     Lorsque `favori` est vrai, la classe `bg-yellow-100` est appliquée.
 -->
-<div x-data=`{favori: false}` class="mt-10 border" :class="{'bg-yellow-100': favori}"> <!-- favori est  -->
+<div x-data=`{favori: ${event.favori}, setFavorite(){ this.favori = !this.favori; setFavoriteEvent('${event.id}', this.favori);}}` 
+    class="mt-10 border" :class="{'bg-yellow-100': favori}"> <!-- favori est  -->
     <h2>{event.title}</h2>
     <img src={event.img} alt={event.imgAlt} class="w-64 h-64 object-cover" />
     <p>{event.date}</p>
     <p>{event.excerpt}</p>
-    <p set:html={event.description}></span></p>
-    <button @click="favori = !favori" class="bg-slate-200 rounded-2xl p-3">Favori</button>
+    <!-- <p set:html={event.description}></span></p> -->
+    <button @click="setFavorite()" class="bg-slate-200 rounded-2xl p-3">Favori</button>
+    <a href=`/agenda/${event.id}` class="bg-slate-200 rounded-2xl p-3">En savoir plus</a>
 </div>
 
+<script>
+    //@ts-nocheck
+    import { setFavoriteEvent } from "../js/backend.mjs";
+    window.setFavoriteEvent = setFavoriteEvent;
+</script>

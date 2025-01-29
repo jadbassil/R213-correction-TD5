@@ -25,3 +25,25 @@ export async function getEvents() {
     return events;
 }
 
+export async function getOneEvent(id) {
+    try {
+        const event = await pb.collection("events").getOne(id);
+        event.img = pb.files.getURL(event, event.imgUrl);
+        event.date = formatDate(event.date);
+        return event;
+    } catch (error) {
+        return null;
+    }
+}
+
+
+export async function setFavoriteEvent(id, valeurFavori) {
+    try {
+        console.log("id", id, "valeurFavori", valeurFavori);
+        await pb.collection("events").update(id, { favori: valeurFavori });
+        return true;
+    } catch (error) {
+        console.log("error", error);
+        return false;
+    }
+}

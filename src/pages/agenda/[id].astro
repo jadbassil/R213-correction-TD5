@@ -1,0 +1,18 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import { getOneEvent } from "../../js/backend.mjs"
+console.log(Astro.params);
+
+const { id } = Astro.params;
+const event = await getOneEvent(id);
+console.log(id);
+
+if (!event) {
+    console.error(`Event with id ${id} not found`);
+    return Astro.redirect("/agenda");
+}
+---
+<Layout title={event?.title}>
+    <img src={event?.img} alt={event?.imgAlt} class="w-80 h-80 object-cover" />
+    <p set:html={event?.description}></p>
+</Layout>
