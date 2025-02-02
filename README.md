@@ -107,18 +107,7 @@ event.formattedDate = formattedDate;
 ```
 # TD 4
 
-- Créez un nouveau fichier `js/utils.mjs`. Ce fichier est un module comme `backend.mjs` mais il contiendra des fonctions qu'on peut utiliser dans toutes les pages mais qui ne servent pas à interagir avec la base de données. Par exemple, il peut contenir la fonction suivante qui permet de formater une date:
-```js
-export function formatDate (date) {
-    // Formater la date en français
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const DateString = new Date(date).toLocaleDateString('fr-FR', options);
-    return DateString;
-}
-```
-- Utilisez la fonction pour formater la date provenant de la base de données. On peut le faire dans la fonction `getEvents()`.
-
-Ensuite, nous allons créer des pages dynamiques paramétrées pour afficher les détails de chaque événement en utilisant des paramètres dans les URL. Cela permet de générer des pages uniques pour chaque événement sans avoir à créer manuellement chaque page.
+L'objectif de ce TD est de créer des pages dynamiques paramétrées pour afficher les détails de chaque événement en utilisant des paramètres dans les URL. Cela permet de générer des pages uniques pour chaque événement sans avoir à créer manuellement chaque page. (Voir: [Astro doc: Routing](https://docs.astro.build/en/guides/routing/))
 
 - Créez le dossier `agenda` dans `src/pages`.
   
@@ -156,6 +145,17 @@ Ensuite, nous allons créer des pages dynamiques paramétrées pour afficher les
 
 - Ajoutez un champ boolean `favori` dans la collection d'événements dans PocketBase.
 
+- Créez un nouveau fichier `js/utils.mjs`. Ce fichier est un module comme `backend.mjs` mais il contiendra des fonctions qu'on peut utiliser dans toutes les pages mais qui ne servent pas à interagir avec la base de données. Par exemple, il peut contenir la fonction suivante qui permet de formater une date:
+```js
+export function formatDate (date) {
+    // Formater la date en français
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const DateString = new Date(date).toLocaleDateString('fr-FR', options);
+    return DateString;
+}
+```
+- Utilisez la fonction pour formater la date provenant de la base de données. On peut le faire dans la fonction `getEvents()`.
+
 Dans la suite, nous allons faire persister le changement de la valeur de favori depuis alpine.js.
 
 - Si ce n'est pas encore fait, modifiez le composant Card pour changer la couleur du fond en fonction de la valeur de favori. Par exemple:
@@ -185,9 +185,9 @@ Dans la suite, nous allons faire persister le changement de la valeur de favori 
     ```
 
 - Dans `x-data` ajoutez la fonction `setFavori` qui change la valeur de favori et qui appelle la fonction `setFavoriteEvent`.
-    ```js
-    x-data=`{favori: ${event.favori}, setFavori(){ this.favori = !this.favori; setFavoriteEvent('${event.id}', this.favori);}}`
-    ```
+```js
+x-data=`{favori: ${event.favori}, setFavori(){ this.favori = !this.favori; setFavoriteEvent('${event.id}', this.favori);}}`
+```
 
 - Remplacez `@click="favori =! favori"` par `@click="setFavori()"`.
 
