@@ -12,19 +12,17 @@ const {...event} = Astro.props; // Destructure les propriétés de l'objet event
 -->
 <div x-data=`{favori: ${event.favori}, 
     setFavorite(){ this.favori = !this.favori; setFavoriteEvent('${event.id}', this.favori);}}` 
-    class="mt-10 border" :class="{'bg-yellow-100': favori}"> <!-- favori est  -->
+    class="mt-10 border" :class="{'bg-yellow-100': favori}"> 
     <h2>{event.title}</h2>
     <img src={event.img} alt={event.imgAlt} class="w-64 h-64 object-cover" />
     <p>{event.date}</p>
     <p>{event.excerpt}</p>
-
-    <!-- <p set:html={event.description}></span></p> -->
     <button @click="setFavorite()" class="bg-slate-200 rounded-2xl p-3">Favori</button>
-    <a href=`/agenda/${event.id}` class="bg-slate-200 rounded-2xl p-3">En savoir plus</a>
+    <a href=`/agenda/${event.id}` class="bg-slate-200 rounded-2xl p-3">En savoir plus</a>  <!--  Lien vers la page de détail de l'événement correspondant à l'ID dynamique de l'événement-->
 </div>
 
 <script>
     //@ts-nocheck
     import { setFavoriteEvent } from "../js/backend.mjs";
-    window.setFavoriteEvent = setFavoriteEvent;
+    window.setFavoriteEvent = setFavoriteEvent; // Expose la fonction setFavoriteEvent à l'objet global window pour qu'elle soit accessible dans le contexte Alpine.js
 </script>

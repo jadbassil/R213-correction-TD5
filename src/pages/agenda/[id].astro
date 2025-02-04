@@ -3,12 +3,12 @@ import Layout from "../../layouts/Layout.astro"
 import { getOneEvent } from "../../js/backend.mjs"
 console.log(Astro.params);
 
-const { id } = Astro.params;
-const event = await getOneEvent(id);
+const { id } = Astro.params; // Récupère l'ID de l'événement dans l'URL
+const event = await getOneEvent(id); // Récupère l'événement correspondant à l'ID
 
-if (!event) {
+if (!event) { // Si l'événement n'existe pas dans la collection pocketbase ou si l'ID est incorrect
     console.error(`Event with id ${id} not found`);
-    return Astro.redirect("/agenda");
+    return Astro.redirect("/agenda"); // Redirige vers la page d'agenda
 }
 ---
 <Layout title={event?.title}>
