@@ -29,7 +29,7 @@ export async function getOneEvent(id) {
     try {
         const event = await pb.collection("events").getOne(id);
         event.img = pb.files.getURL(event, event.imgUrl);
-        event.date = formatDate(event.date);
+        event.formattedDate = formatDate(event.date);
         return event;
     } catch (error) {
         return null;

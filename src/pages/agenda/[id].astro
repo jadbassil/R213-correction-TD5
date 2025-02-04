@@ -5,7 +5,6 @@ console.log(Astro.params);
 
 const { id } = Astro.params;
 const event = await getOneEvent(id);
-console.log(id);
 
 if (!event) {
     console.error(`Event with id ${id} not found`);
@@ -15,4 +14,6 @@ if (!event) {
 <Layout title={event?.title}>
     <img src={event?.img} alt={event?.imgAlt} class="w-80 h-80 object-cover" />
     <p set:html={event?.description}></p>
+    <p>{event.date}</p>
+    <p>{event.formattedDate}</p>
 </Layout>
