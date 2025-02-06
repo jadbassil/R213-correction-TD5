@@ -6,66 +6,36 @@ let pbMessage = "";
 
 if (Astro.request.method === "POST") {
     const data = await Astro.request.formData();
-    const today = new Date();
-    let hasError = false;
-    //check if the date is in the past
+    console.log(data);
 
-    if (new Date(data.get("date")?.toString() || today) < today) {
+    const eventDate = new Date(data.get("date")?.toString() || new Date());
+
+    if (eventDate < new Date()) {
         pbMessage = "La date doit être dans le futur";
-        hasError = true;
-    }
-    
-    if (!hasError) {
+    } else {
         const resp = await addEvent(data);
         pbMessage = resp.message;
     }
 }
 ---
 
-<Layout title="Add event">
-    <h1 class="text-3xl">Add event</h1>
+<Layout title="Ajouter un événement">
+    <h1 class="text-3xl">Ajouter un événement</h1>
     <p>{pbMessage}</p>
-    <form
-        class="flex flex-col p-4"
-        action="/agenda/add"
-        method="post"
-        enctype="multipart/form-data"
-    >
-        <input
-            type="text"
-            name="title"
-            placeholder="Title"
-            class="border my-4 p-2 rounded-md"
-            
-        />
-
-        <select name="categorie">
+    <form class="flex flex-col p-4"   action="/agenda/add"  method="post"  enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Titre" class="border my-4 p-2 rounded-md" />
+        <select name="categorie" class="border my-4 p-2">
             <option value="Théâtre">Théâtre</option>
             <option value="Musique">Musique</option>
         </select>
-        <input
-            type="text"
-            name="excerpt"
-            placeholder="excerpt"
-            class="border my-4 p-2 rounded-md"
-            
-        />
+        <input type="text" name="excerpt" placeholder="Extrait" class="border my-4 p-2 rounded-md" />
         <select name="lieu" class="border my-4 p-2">
             <option value="Théâtre">Théâtre</option>
             <option value="Conservatoire">Conservatoire</option>
         </select>
-        <textarea
-            name="description"
-            placeholder="Description"
-            class="border my-4 p-2 rounded-md"></textarea>
+        <textarea name="description" placeholder="Description" class="border my-4 p-2 rounded-md"></textarea>
         <input type="date" name="date" class="border my-4 p-2 rounded-md" />
         <input type="file" name="imgUrl" class="border my-4 p-2 rounded-md" />
-
-        <input
-            type="submit"
-            value="Ajouter"
-            class="bg-slate-500 rounded-lg p-5"
-            
-        />
+        <input type="submit" value="Ajouter" class="bg-slate-500 rounded-lg p-5" />
     </form>
 </Layout>
