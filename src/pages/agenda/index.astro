@@ -5,7 +5,7 @@ import Card from "../../components/Card.astro";
 import { getEvents } from "../../js/backend.mjs";
 
 let events = await getEvents(); // Retourne une liste d'événements en ejoutant un champ "img" contenant le URL complet de l'image associée à l'événement.
-let categories = ['Tout', ...events.map((event) => event.categorie)]; // Retourne une liste de catégories d'événements
+let categories = ['Tout', ...new Set(events.map((event) => event.categorie))]; // Retourne une liste de catégories d'événements sans doublons
 console.log(categories);
 
 if(Astro.request.method == 'POST') {
