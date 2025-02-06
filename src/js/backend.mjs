@@ -25,3 +25,43 @@ export async function getEvents() {
     return events;
 }
 
+export async function getOneEvent(id) {
+    try {
+        const event = await pb.collection("events").getOne(id);
+        event.img = pb.files.getURL(event, event.imgUrl);
+        event.formattedDate = formatDate(event.date);
+        return event;
+    } catch (error) {
+        return null;
+    }
+}
+
+
+export async function setFavoriteEvent(id, valeurFavori) {
+    try {
+        console.log("id", id, "valeurFavori", valeurFavori);
+        await pb.collection("events").update(id, { favori: valeurFavori });
+        return true;
+    } catch (error) {
+        console.log("error", error);
+        return false;
+    }
+}
+
+
+export async function addEvent(data) {
+    try {
+        console.log(data);
+        
+        await pb.collection("events").create(data);
+        return {
+            success: true,
+            message: "L'événement a bien été ajouté.",
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: "Une erreur est survenue lors de l'ajout de l'événement: " + error,
+        }
+    }
+}
