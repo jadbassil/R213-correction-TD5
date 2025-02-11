@@ -312,10 +312,13 @@ Dans la suite, nous allons utiliser un formulaire dans `agenda/index.astro` pour
 
 - Définissez la liste des catégories dans le frontmatter :
 ```js
-const categories = ['Tout', 'Théâtre', 'Musique', 'Danse']; // Cette liste doit contenir toutes les catégories exactement comme elles sont définies dans PocketBase.
+const categories = ['Tout', 'Théâtre', 'Musique']; // Cette liste doit contenir toutes les catégories exactement comme elles sont définies dans PocketBase.
 console.log(categories);
 ```
 
+> Vous pouvez aussi utiliser une liste dynamique :
+```js 
+const categories = ['Tout', ...new Set(events.map((event) => event.categorie))]; // Retourne une liste de catégories d'événements sans doublons.
 ```
 
 - Ajoutez un formulaire qui utilise la balise `<select>` pour choisir la catégorie :
@@ -337,18 +340,45 @@ console.log(categories);
 
 - Dans le frontmatter, ajoutez la gestion du formulaire pour filtrer les événements en fonction de la catégorie sélectionnée :
 ```js
-let events = await getEvents(); // Récupère la liste des événements
-const categories = ['Tout', 'Théâtre', 'Musique']; // Définit la liste des catégories
+if (Astro.request.method == 'GET') {
+    events = await getEvents(); // Retourne une liste d'événements en ejoutant un champ "img" contenant le URL complet de l'image associée à l'événement.
+    console.log(categories);
+} else if(Astro.request.method == 'POST') {
+    const data = await Astro.request.formData();
+    const categorie = data.get('categorie');
+    if(categorie != 'Tout'){
+        const response = await filterByCategory(categorie);
+        events = response.events;
+        // Mettre la categire choisie en haut de la liste
+        categories = [categorie, ...categories.filter((c) => c != categorie)];
+    } else {
+        events = await getEvents();
+    }
+}
+```
 
-if (Astro.request.method === 'POST') { // Vérifie si la méthode de la requête est POST
-    const data = await Astro.request.formData(); // Récupère les données du formulaire de la requête
-    console.log(data); // Affiche les données du formulaire dans la console
-
-    const categorie = data.get('categorie'); // Récupère la catégorie sélectionnée dans le formulaire
-    if (categorie !== 'Tout') { // Vérifie si la catégorie sélectionnée n'est pas "Tout"
-        events = events.filter((event) => event.categorie === categorie); // Filtre les événements par catégorie
-        categories = [categorie, ...categories.filter((c) => c !== categorie)]; // Met à jour la liste des catégories en plaçant la catégorie sélectionnée en premier
-        console.log(categories); // Affiche la liste des catégories mise à jour dans la console
+- Ajoutez la fonction `filterByCategory(categorie)` dans le fichier `backend.js`:
+```js
+export async function filterByCategory(category) {
+    try {
+        let events = await pb.collection("events").getFullList({
+            filter: `categorie = "${category}"`,
+        });
+        events = events.map((event) => {
+            event.img = pb.files.getURL(event, event.imgUrl);
+            return event;
+        });
+        return {
+            success: true,
+            events: events,
+            message: "Les événements ont été filtrés avec succès.",
+        }
+    } catch (error) {
+        return {
+            success: false,
+            events: [],
+            message: "Une erreur est survenue lors du filtrage des événements: " + error,
+        }
     }
 }
 ```
