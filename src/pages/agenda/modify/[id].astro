@@ -1,0 +1,54 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import {getOneEvent, updateEvent } from "../../../js/backend.mjs";
+
+let pbMessage = '';
+
+const { id } = Astro.params;
+let event = await getOneEvent(id);
+if(!event) {
+    console.error(`Event with id ${id} not found`);
+    return Astro.redirect("/agenda");
+}
+console.log(event);
+
+
+if(Astro.request.method == "POST") {
+    const data = await Astro.request.formData();
+    console.log(data);
+    if(new Date(data.get("date")?.toString() || 0) < new Date()){
+        pbMessage = "La date de l'événement doit être supérieure à la date d'aujourd'hui";
+    } else {
+        const response = await updateEvent(event.id, data);
+        event = response.event;
+        if(!event) {
+            console.error(`Event with id ${id} not found`);
+            return Astro.redirect("/agenda");
+        }
+        pbMessage = response.message;
+    }
+   
+}
+
+---
+
+<Layout title="Ajouter un événement">
+    <h1 class="text-3xl">Modifier l'événement: {event.title}</h1>
+    <p class="text-red-500">{pbMessage}</p>
+    <form method="post" action=`/agenda/modify/${event.id}` enctype="multipart/form-data" class="flex flex-col p-4">
+        <input type="text" name="title" placeholder="Titre" class="border my-4 p-2 rounded-md" value={event?.title} required/>
+        <select name="categorie" class="border my-4 p-2">
+            <option value="Théâtre" selected = {event.categorie == 'Théâtre'}>Théâtre</option>
+            <option value="Musique" selected = {event.categorie == 'Musique'}>Musique</option>
+        </select>
+        <input type="text" name="excerpt" value={event.excerpt} placeholder="Extrait" class="border my-4 p-2 rounded-md" required/>
+        <select name="lieu" class="border my-4 p-2">
+            <option value="Théâtre" selected = {event.categorie == 'Théâtre'}>Théâtre</option>
+            <option value="Conservatoire" selected = {event.categorie == 'Conservatoire'}>Conservatoire</option>
+        </select>
+        <textarea name="description" placeholder="Description" class="border my-4 p-2 rounded-md">{event?.description}</textarea>
+        <input type="date" name="date" value={new Date(event.date).toISOString().split('T')[0]} class="border my-4 p-2 rounded-md" required/>
+        <input type="file" name="imgUrl" class="border my-4 p-2 rounded-md" />
+        <input type="submit" value="Modifier" class="bg-slate-500 rounded-lg p-5" />
+    </form>
+</Layout>

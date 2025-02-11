@@ -19,6 +19,7 @@ const {...event} = Astro.props; // Destructure les propriétés de l'objet event
     <p>{event.excerpt}</p>
     <button @click="setFavorite()" class="bg-slate-200 rounded-2xl p-3">Favori</button>
     <a href=`/agenda/${event.id}` class="bg-slate-200 rounded-2xl p-3">En savoir plus</a>  <!--  Lien vers la page de détail de l'événement correspondant à l'ID dynamique de l'événement-->
+    <a href=`/agenda/modify/${event.id}` class="bg-slate-200 rounded-2xl p-3">Modifier</a> <!--  Lien vers la page de modification de l'événement correspondant à l'ID dynamique de l'événement-->
 </div>
 
 <script>

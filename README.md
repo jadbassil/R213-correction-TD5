@@ -312,13 +312,10 @@ Dans la suite, nous allons utiliser un formulaire dans `agenda/index.astro` pour
 
 - Définissez la liste des catégories dans le frontmatter :
 ```js
-const categories = ['Tout', 'Théâtre', 'Musique']; // Cette liste doit contenir toutes les catégories exactement comme elles sont définies dans PocketBase.
+const categories = ['Tout', 'Théâtre', 'Musique', 'Danse']; // Cette liste doit contenir toutes les catégories exactement comme elles sont définies dans PocketBase.
 console.log(categories);
 ```
 
-> Vous pouvez aussi utiliser une liste dynamique :
-```js 
-const categories = ['Tout', ...new Set(events.map((event) => event.categorie))]; // Retourne une liste de catégories d'événements sans doublons.
 ```
 
 - Ajoutez un formulaire qui utilise la balise `<select>` pour choisir la catégorie :
