@@ -4,16 +4,16 @@ import Layout from "../../layouts/Layout.astro";
 import Card from "../../components/Card.astro";
 import { filterByCategory, getEvents } from "../../js/backend.mjs";
 
-let events = []
-let categories = ['Tout', 'Théâtre', 'Musique', 'Danse'];
+let events = [];
+let categories = ["Tout", "Théâtre", "Musique", "Danse"];
 
-if (Astro.request.method == 'GET') {
+if (Astro.request.method == "GET") {
     events = await getEvents(); // Retourne une liste d'événements en ejoutant un champ "img" contenant le URL complet de l'image associée à l'événement.
     console.log(categories);
-} else if(Astro.request.method == 'POST') {
+} else if (Astro.request.method == "POST") {
     const data = await Astro.request.formData();
-    const categorie = data.get('categorie');
-    if(categorie != 'Tout'){
+    const categorie = data.get("categorie");
+    if (categorie != "Tout") {
         const response = await filterByCategory(categorie);
         events = response.events;
         console.log(response.message);
@@ -22,7 +22,7 @@ if (Astro.request.method == 'GET') {
     } else {
         events = await getEvents();
     }
-}  
+}
 ---
 
 <Layout>
@@ -45,5 +45,4 @@ if (Astro.request.method == 'GET') {
         // parcourir la liste d'événements et afficher chaque événement en utilisant le composant Card. L'operateur spread ... permet de passer toutes les propriétés de l'objet event à la balise <Card>
         events.map((event) => <Card {...event} />)
     }
-
 </Layout>
