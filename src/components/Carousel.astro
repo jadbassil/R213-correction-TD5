@@ -1,0 +1,12 @@
+---
+const {events} = Astro.props;
+---
+
+<div x-data=`{events:${JSON.stringify(events)}, index: 0 }`>
+    <h1 class="text-3xl"><span x-text="events[index].title"></span></h1>
+    <img x-bind:src="events[index].img" alt="image" class="w-auto h-auto object-cover"/>
+    <div>
+        <button @click="index = (index === 0 ? events.length - 1 : index - 1)" class="bg-gray-800 text-white p-2">Précédent</button>
+        <button @click="index = (index === events.length - 1 ? 0 : index + 1)" class="bg-gray-800 text-white p-2">Suivant</button>
+    </div>
+</div>

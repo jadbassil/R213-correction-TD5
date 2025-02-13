@@ -2,21 +2,25 @@
 //@ts-nocheck
 import Layout from "../../layouts/Layout.astro";
 import Card from "../../components/Card.astro";
-import { getEvents } from "../../js/backend.mjs";
+import { filterByCategory, getEvents } from "../../js/backend.mjs";
 
-let events = await getEvents(); // Retourne une liste d'événements en ejoutant un champ "img" contenant le URL complet de l'image associée à l'événement.
-let categories = ['Tout', ...events.map((event) => event.categorie)]; // Retourne une liste de catégories d'événements
-console.log(categories);
+let events = [];
+let categories = ["Tout", "Théâtre", "Musique", "Danse"];
 
-if(Astro.request.method == 'POST') {
+if (Astro.request.method == "GET") {
+    events = await getEvents(); // Retourne une liste d'événements en ejoutant un champ "img" contenant le URL complet de l'image associée à l'événement.
+    console.log(categories);
+} else if (Astro.request.method == "POST") {
     const data = await Astro.request.formData();
-    console.log(data);
-    const categorie = data.get('categorie');
-    if(categorie != 'Tout'){
-        events = events.filter((event) => event.categorie == categorie);
-        // put categorie at the beginning of the list
+    const categorie = data.get("categorie");
+    if (categorie != "Tout") {
+        const response = await filterByCategory(categorie);
+        events = response.events;
+        console.log(response.message);
+        // Mettre la categire choisie en haut de la liste
         categories = [categorie, ...categories.filter((c) => c != categorie)];
-        console.log(categories);   
+    } else {
+        events = await getEvents();
     }
 }
 ---
@@ -33,7 +37,7 @@ if(Astro.request.method == 'POST') {
                 ))
             }
         </select>
-        <input type="submit" value="Filter" />
+        <input type="submit" value="Filtrer" class="text-blue-800 under"/>
         <br /><br />
     </form>
     <a href="/agenda/add" class="text-blue-800 underline">Ajouter un événement</a>
@@ -41,5 +45,4 @@ if(Astro.request.method == 'POST') {
         // parcourir la liste d'événements et afficher chaque événement en utilisant le composant Card. L'operateur spread ... permet de passer toutes les propriétés de l'objet event à la balise <Card>
         events.map((event) => <Card {...event} />)
     }
-
 </Layout>

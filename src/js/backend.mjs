@@ -48,20 +48,57 @@ export async function setFavoriteEvent(id, valeurFavori) {
     }
 }
 
-
 export async function addEvent(data) {
     try {
-        console.log(data);
-        
         await pb.collection("events").create(data);
         return {
             success: true,
-            message: "L'événement a bien été ajouté.",
+            message: "L'événement a été ajouté avec succès.",
         };
     } catch (error) {
         return {
             success: false,
             message: "Une erreur est survenue lors de l'ajout de l'événement: " + error,
+        };
+    }
+}
+
+export async function filterByCategory(category) {
+    try {
+        let events = await pb.collection("events").getFullList({
+            filter: `categorie = "${category}"`,
+        });
+        events = events.map((event) => {
+            event.img = pb.files.getURL(event, event.imgUrl);
+            return event;
+        });
+        return {
+            success: true,
+            events: events,
+            message: "Les événements ont été filtrés avec succès.",
         }
+    } catch (error) {
+        return {
+            success: false,
+            events: [],
+            message: "Une erreur est survenue lors du filtrage des événements: " + error,
+        }
+    }
+}
+
+export async function updateEvent(id, data) {
+    try {
+        const event = await pb.collection("events").update(id, data);
+        return {
+            success: true,
+            event: event,
+            message: "L'événement a été modifié avec succès.",
+        };
+    } catch (error) {
+        return {
+            success: false,
+            event: null,
+            message: "Une erreur est survenue lors de la modification de l'événement: " + error,
+        };
     }
 }
