@@ -7,6 +7,17 @@ import { filterByCategory, getEvents } from "../../js/backend.mjs";
 let events = [];
 let categories = ["Tout", "Théâtre", "Musique", "Danse"];
 
+/**
+ * Ce fichier gère les requêtes HTTP pour la page d'agenda.
+ * 
+ * Si la méthode de la requête est "GET", il récupère une liste d'événements.
+ * 
+ * Si la méthode de la requête est "POST", il traite les données du formulaire pour filtrer les événements par catégorie.
+ * - Si la catégorie choisie n'est pas "Tout", il filtre les événements par cette catégorie et met la catégorie choisie en haut de la liste.
+ * - Si la catégorie choisie est "Tout", il récupère tous les événements.
+ * 
+ */
+
 if (Astro.request.method == "GET") {
     events = await getEvents(); // Retourne une liste d'événements en ejoutant un champ "img" contenant le URL complet de l'image associée à l'événement.
     console.log(categories);

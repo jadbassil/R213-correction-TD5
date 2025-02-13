@@ -3,6 +3,15 @@ import Layout from "../../layouts/Layout.astro";
 import { addEvent } from "../../js/backend.mjs";
 
 let pbMessage = '';
+/**
+ * Gère la requête POST pour ajouter un événement.
+ * 
+ * Si la méthode de la requête est "POST", elle récupère les données du formulaire de la requête.
+ * 
+ * - Affiche les données du formulaire dans la console.
+ * - Vérifie si la date de l'événement est passée. Si c'est le cas, définit un message d'erreur.
+ * - Sinon, appelle la fonction addEvent avec les données du formulaire et définit le message de réponse.
+ */
 if(Astro.request.method == "POST") {
     const data = await Astro.request.formData();
     console.log(data);
